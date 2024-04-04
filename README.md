@@ -48,6 +48,19 @@ If you wish to use this in your scientific work, please cite the SymCC paper:
 More information on the paper is available
 [here](http://www.s3.eurecom.fr/tools/symbolic_execution/symcc.html).
 
+### Bug reporting
+
+We appreciate bugs with test cases and steps to reproduce, PR with
+corresponding test cases. SymCC Runtime is currently understaffed, we hope to
+catch up and get back to active development at some point.
+
+## Contact
+
+Feel free to use GitHub issues and pull requests for improvements, bug reports,
+etc. Alternatively, you can send an email to Sebastian Poeplau
+(sebastian.poeplau@eurecom.fr) and Aurélien Francillon
+(aurelien.francillon@eurecom.fr).
+
 ## License
 
 SymCC Runtime is free software: you can redistribute it and/or modify it under the terms
