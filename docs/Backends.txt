@@ -17,8 +17,8 @@ that implements the interface defined in runtime/RuntimeCommon.h (with type
 
 Depending on the build option QSYM_BACKEND we build either our own backend or
 parts of QSYM (which are pulled in via a git submodule) and a small translation
-layer. The code used by both backends is in the directory "runtime", while the
-specific parts are in "runtime/simple" and "runtime/qsym".
+layer. The code used by both backends is in the top-level directory, while the
+specific parts are in "simple_backend" and "qsym_backend".
 
 The QSYM backend expects to be passed the program counter at each jump
 instruction, which is used to uniquely identify the jump site and implement a
