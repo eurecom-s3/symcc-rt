@@ -17,7 +17,11 @@
 
 set(QSYM_SOURCE_DIR "qsym/qsym/pintool")
 
-find_package(LLVM REQUIRED CONFIG)
+if (NOT DEFINED LLVM_VERSION)
+  message(FATAL_ERROR "LLVM version must be specified with the LLVM_VERSION variable.")
+endif()
+
+find_package(LLVM ${LLVM_VERSION} REQUIRED CONFIG)
 add_definitions(${LLVM_DEFINITIONS})
 include_directories(SYSTEM ${LLVM_INCLUDE_DIRS})
 
@@ -38,7 +42,7 @@ configure CMake with -DZ3_TRUST_SYSTEM_VERSION=on (see also docs/Configuration.t
   endif()
 endif()
 
-add_library(SymRuntime SHARED
+set(SymccRtSrc
   ${QSYM_SOURCE_DIR}/expr.cpp
   ${QSYM_SOURCE_DIR}/expr_builder.cpp
   ${QSYM_SOURCE_DIR}/expr_cache.cpp
@@ -54,18 +58,31 @@ add_library(SymRuntime SHARED
   ${SHARED_RUNTIME_SOURCES}
   Runtime.cpp)
 
-target_include_directories(SymRuntime PRIVATE
+add_library(SymccRtObj OBJECT
+        ${SymccRtSrc})
+
+set_property(TARGET SymccRtObj PROPERTY POSITION_INDEPENDENT_CODE 1)
+
+add_library(SymccRtShared SHARED $<TARGET_OBJECTS:SymccRtObj>)
+add_library(SymccRtStatic STATIC $<TARGET_OBJECTS:SymccRtObj>)
+
+target_include_directories(SymccRtObj PRIVATE
   ${CMAKE_CURRENT_SOURCE_DIR}     # for our fake pin.H and Runtime.h
   ${CMAKE_CURRENT_SOURCE_DIR}/..) # for common runtime components
 
-target_include_directories(SymRuntime SYSTEM PRIVATE
+target_include_directories(SymccRtObj SYSTEM PRIVATE
   ${Z3_CXX_INCLUDE_DIRS}        # for Z3 support
   ${QSYM_SOURCE_DIR})
 
 # We need to get the LLVM support component for llvm::APInt.
 llvm_map_components_to_libnames(QSYM_LLVM_DEPS support)
 
-target_link_libraries(SymRuntime ${Z3_LIBRARIES} ${QSYM_LLVM_DEPS})
+set(SymccRtDeps ${Z3_LIBRARIES} ${QSYM_LLVM_DEPS})
+
+# Object libraries cannot be linked directly, so we link the final libraries one by one
+# https://gitlab.kitware.com/cmake/cmake/-/issues/18090
+target_link_libraries(SymccRtShared ${SymccRtDeps})
+target_link_libraries(SymccRtStatic ${SymccRtDeps})
 
 # We use std::filesystem, which has been added in C++17. Before its official
 # inclusion in the standard library, Clang shipped the feature first in
@@ -75,4 +92,4 @@ target_link_libraries(SymRuntime ${Z3_LIBRARIES} ${QSYM_LLVM_DEPS})
 # std::filesystem - we catch this case in order to enable users of such systems
 # to build with the default compiler.
 find_package(Filesystem COMPONENTS Final Experimental)
-target_link_libraries(SymRuntime std::filesystem)
+target_link_libraries(SymccRtObj std::filesystem)

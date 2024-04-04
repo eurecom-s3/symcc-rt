@@ -13,20 +13,33 @@
 # You should have received a copy of the GNU Lesser General Public License along
 # with the SymCC runtime. If not, see <https://www.gnu.org/licenses/>.
 
-cmake_minimum_required(VERSION 3.5)
-project(SymRuntime)
+cmake_minimum_required(VERSION 3.22)
+project(SymccRuntime)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 \
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
+
+set(CMAKE_CXX_STANDARD 17)
+
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} \
 -Wredundant-decls -Wcast-align \
 -Wmissing-include-dirs -Wswitch-default \
 -Wextra -Wall -Winvalid-pch -Wredundant-decls -Wformat=2 \
 -Wmissing-format-attribute -Wformat-nonliteral")
 
-option(QSYM_BACKEND "Use the Qsym backend instead of our own" OFF)
+set(SYMCC_RT_AVAILABLE_BACKENDS "simple" "qsym")
+string(REPLACE ";" ", " SYMCC_RT_AVAILABLE_BACKENDS_FMT "\{${SYMCC_RT_AVAILABLE_BACKENDS}\}")
+
+set(SYMCC_RT_BACKEND "qsym" CACHE STRING "SymCC Runtime Backend to build.\
+Backends available: ${SYMCC_RT_AVAILABLE_BACKENDS_FMT}.")
 option(Z3_TRUST_SYSTEM_VERSION "Use the system-provided Z3 without a version check" OFF)
 
-# Place the final product in the top-level output directory
+if (NOT DEFINED LLVM_VERSION)
+  set(LLVM_VERSION 17 CACHE STRING "LLVM version to use. The corresponding LLVM dev package must be installed.")
+endif()
+
+# Place the final products in the top-level output directory
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 
 # There is list(TRANSFORM ... PREPEND ...), but it's not available before CMake 3.12.
 set(SHARED_RUNTIME_SOURCES
@@ -36,8 +49,27 @@ set(SHARED_RUNTIME_SOURCES
   ${CMAKE_CURRENT_SOURCE_DIR}/Shadow.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/GarbageCollection.cpp)
 
-if (${QSYM_BACKEND})
+# Backends should produce two targets: SymccRtStatic (static library) and SymccRtShared (shared library).
+if (${SYMCC_RT_BACKEND} STREQUAL "qsym")
   add_subdirectory(qsym_backend)
-else()
+elseif (${SYMCC_RT_BACKEND} STREQUAL "simple")
   add_subdirectory(simple_backend)
+else()
+  message(FATAL_ERROR "An invalid backend has been selected: \"${SYMCC_RT_BACKEND}\".\
+  Please select a valid backend with the SYMCC_RT_BACKEND option among ${SYMCC_RT_AVAILABLE_BACKENDS_FMT}.")
 endif()
+
+message(STATUS "Using ${SYMCC_RT_BACKEND} backend.")
+
+if (NOT TARGET SymccRtStatic)
+  message(FATAL_ERROR "The backend \"${SYMCC_RT_BACKEND}\" does not produce the target SymccRtStatic.\
+This is a bug and it should be reported. Please open PR to the symcc-rt repository.")
+endif()
+
+if (NOT TARGET SymccRtShared)
+  message(FATAL_ERROR "The backend \"${SYMCC_RT_BACKEND}\" does not produce the target SymccRtShared.\
+This is a bug and it should be reported. Please open PR to the symcc-rt repository.")
+endif()
+
+set_target_properties(SymccRtStatic PROPERTIES OUTPUT_NAME "symcc-rt")
+set_target_properties(SymccRtShared PROPERTIES OUTPUT_NAME "symcc-rt")
