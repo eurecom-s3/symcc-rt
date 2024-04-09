@@ -68,7 +68,7 @@ add_library(SymccRtStatic STATIC $<TARGET_OBJECTS:SymccRtObj>)
 
 target_include_directories(SymccRtObj PRIVATE
   ${CMAKE_CURRENT_SOURCE_DIR}     # for our fake pin.H and Runtime.h
-  ${CMAKE_CURRENT_SOURCE_DIR}/..) # for common runtime components
+  ${SYMCC_RT_INCLUDE_DIR}) # for common runtime components
 
 target_include_directories(SymccRtObj SYSTEM PRIVATE
   ${Z3_CXX_INCLUDE_DIRS}        # for Z3 support

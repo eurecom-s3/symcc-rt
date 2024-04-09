@@ -38,23 +38,20 @@ set(LLVM_VERSION "" CACHE STRING "LLVM version to use. The corresponding LLVM de
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 
+set(SYMCC_RT_SRC_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src")
+set(SYMCC_RT_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include")
+set(SYMCC_RT_BACKEND_DIR "${CMAKE_CURRENT_SOURCE_DIR}/backends/${SYMCC_RT_BACKEND}")
+
 # There is list(TRANSFORM ... PREPEND ...), but it's not available before CMake 3.12.
 set(SHARED_RUNTIME_SOURCES
-  ${CMAKE_CURRENT_SOURCE_DIR}/Config.cpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/RuntimeCommon.cpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/LibcWrappers.cpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/Shadow.cpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/GarbageCollection.cpp)
+  ${SYMCC_RT_SRC_DIR}/Config.cpp
+  ${SYMCC_RT_SRC_DIR}/RuntimeCommon.cpp
+  ${SYMCC_RT_SRC_DIR}/LibcWrappers.cpp
+  ${SYMCC_RT_SRC_DIR}/Shadow.cpp
+  ${SYMCC_RT_SRC_DIR}/GarbageCollection.cpp)
 
 # Backends should produce two targets: SymccRtStatic (static library) and SymccRtShared (shared library).
-if (${SYMCC_RT_BACKEND} STREQUAL "qsym")
-  add_subdirectory(qsym_backend)
-elseif (${SYMCC_RT_BACKEND} STREQUAL "simple")
-  add_subdirectory(simple_backend)
-else()
-  message(FATAL_ERROR "An invalid backend has been selected: \"${SYMCC_RT_BACKEND}\".\
-  Please select a valid backend with the SYMCC_RT_BACKEND option among ${SYMCC_RT_AVAILABLE_BACKENDS_FMT}.")
-endif()
+add_subdirectory("${SYMCC_RT_BACKEND_DIR}")
 
 message(STATUS "Using ${SYMCC_RT_BACKEND} backend.")
 

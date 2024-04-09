@@ -48,7 +48,7 @@ target_link_libraries(SymccRtStatic ${SymccRtDeps})
 
 target_include_directories(SymccRtObj PRIVATE
   ${CMAKE_CURRENT_SOURCE_DIR}
-  ${CMAKE_CURRENT_SOURCE_DIR}/..
+  ${SYMCC_RT_INCLUDE_DIR}
   ${Z3_C_INCLUDE_DIRS})
 
 set_target_properties(SymccRtObj PROPERTIES COMPILE_FLAGS "-Werror -Wno-error=deprecated-declarations")
