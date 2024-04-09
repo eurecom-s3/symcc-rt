@@ -29,26 +29,26 @@ configure CMake with -DZ3_TRUST_SYSTEM_VERSION=on (see also docs/Configuration.t
   endif()
 endif()
 
-set(SymccRtSrc ${SHARED_RUNTIME_SOURCES} Runtime.cpp)
+set(SymCCRtSrc ${SHARED_RUNTIME_SOURCES} Runtime.cpp)
 
-add_library(SymccRtObj OBJECT
-        ${SymccRtSrc})
+add_library(SymCCRtObj OBJECT
+        ${SymCCRtSrc})
 
-set_property(TARGET SymccRtObj PROPERTY POSITION_INDEPENDENT_CODE 1)
+set_property(TARGET SymCCRtObj PROPERTY POSITION_INDEPENDENT_CODE 1)
 
-add_library(SymccRtShared SHARED $<TARGET_OBJECTS:SymccRtObj>)
-add_library(SymccRtStatic STATIC $<TARGET_OBJECTS:SymccRtObj>)
+add_library(SymCCRtShared SHARED $<TARGET_OBJECTS:SymCCRtObj>)
+add_library(SymCCRtStatic STATIC $<TARGET_OBJECTS:SymCCRtObj>)
 
-set(SymccRtDeps ${Z3_LIBRARIES})
+set(SymCCRtDeps ${Z3_LIBRARIES})
 
 # Object libraries cannot be linked directly
 # https://gitlab.kitware.com/cmake/cmake/-/issues/18090
-target_link_libraries(SymccRtShared ${SymccRtDeps})
-target_link_libraries(SymccRtStatic ${SymccRtDeps})
+target_link_libraries(SymCCRtShared ${SymCCRtDeps})
+target_link_libraries(SymCCRtStatic ${SymCCRtDeps})
 
-target_include_directories(SymccRtObj PRIVATE
+target_include_directories(SymCCRtObj PRIVATE
   ${CMAKE_CURRENT_SOURCE_DIR}
   ${SYMCC_RT_INCLUDE_DIR}
   ${Z3_C_INCLUDE_DIRS})
 
-set_target_properties(SymccRtObj PROPERTIES COMPILE_FLAGS "-Werror -Wno-error=deprecated-declarations")
+set_target_properties(SymCCRtObj PROPERTIES COMPILE_FLAGS "-Werror -Wno-error=deprecated-declarations")

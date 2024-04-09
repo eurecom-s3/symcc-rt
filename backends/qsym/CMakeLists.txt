@@ -42,7 +42,7 @@ configure CMake with -DZ3_TRUST_SYSTEM_VERSION=on (see also docs/Configuration.t
   endif()
 endif()
 
-set(SymccRtSrc
+set(SymCCRtSrc
   ${QSYM_SOURCE_DIR}/expr.cpp
   ${QSYM_SOURCE_DIR}/expr_builder.cpp
   ${QSYM_SOURCE_DIR}/expr_cache.cpp
@@ -58,31 +58,31 @@ set(SymccRtSrc
   ${SHARED_RUNTIME_SOURCES}
   Runtime.cpp)
 
-add_library(SymccRtObj OBJECT
-        ${SymccRtSrc})
+add_library(SymCCRtObj OBJECT
+        ${SymCCRtSrc})
 
-set_property(TARGET SymccRtObj PROPERTY POSITION_INDEPENDENT_CODE 1)
+set_property(TARGET SymCCRtObj PROPERTY POSITION_INDEPENDENT_CODE 1)
 
-add_library(SymccRtShared SHARED $<TARGET_OBJECTS:SymccRtObj>)
-add_library(SymccRtStatic STATIC $<TARGET_OBJECTS:SymccRtObj>)
+add_library(SymCCRtShared SHARED $<TARGET_OBJECTS:SymCCRtObj>)
+add_library(SymCCRtStatic STATIC $<TARGET_OBJECTS:SymCCRtObj>)
 
-target_include_directories(SymccRtObj PRIVATE
+target_include_directories(SymCCRtObj PRIVATE
   ${CMAKE_CURRENT_SOURCE_DIR}     # for our fake pin.H and Runtime.h
   ${SYMCC_RT_INCLUDE_DIR}) # for common runtime components
 
-target_include_directories(SymccRtObj SYSTEM PRIVATE
+target_include_directories(SymCCRtObj SYSTEM PRIVATE
   ${Z3_CXX_INCLUDE_DIRS}        # for Z3 support
   ${QSYM_SOURCE_DIR})
 
 # We need to get the LLVM support component for llvm::APInt.
 llvm_map_components_to_libnames(QSYM_LLVM_DEPS support)
 
-set(SymccRtDeps ${Z3_LIBRARIES} ${QSYM_LLVM_DEPS})
+set(SymCCRtDeps ${Z3_LIBRARIES} ${QSYM_LLVM_DEPS})
 
 # Object libraries cannot be linked directly, so we link the final libraries one by one
 # https://gitlab.kitware.com/cmake/cmake/-/issues/18090
-target_link_libraries(SymccRtShared ${SymccRtDeps})
-target_link_libraries(SymccRtStatic ${SymccRtDeps})
+target_link_libraries(SymCCRtShared ${SymCCRtDeps})
+target_link_libraries(SymCCRtStatic ${SymCCRtDeps})
 
 # We use std::filesystem, which has been added in C++17. Before its official
 # inclusion in the standard library, Clang shipped the feature first in
@@ -92,4 +92,4 @@ target_link_libraries(SymccRtStatic ${SymccRtDeps})
 # std::filesystem - we catch this case in order to enable users of such systems
 # to build with the default compiler.
 find_package(Filesystem COMPONENTS Final Experimental)
-target_link_libraries(SymccRtObj std::filesystem)
+target_link_libraries(SymCCRtObj std::filesystem)

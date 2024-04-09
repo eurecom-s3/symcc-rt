@@ -14,7 +14,7 @@
 # with the SymCC runtime. If not, see <https://www.gnu.org/licenses/>.
 
 cmake_minimum_required(VERSION 3.16)
-project(SymccRuntime)
+project(SymCCRuntime)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 
@@ -50,20 +50,20 @@ set(SHARED_RUNTIME_SOURCES
   ${SYMCC_RT_SRC_DIR}/Shadow.cpp
   ${SYMCC_RT_SRC_DIR}/GarbageCollection.cpp)
 
-# Backends should produce two targets: SymccRtStatic (static library) and SymccRtShared (shared library).
+# Backends should produce two targets: SymCCRtStatic (static library) and SymCCRtShared (shared library).
 add_subdirectory("${SYMCC_RT_BACKEND_DIR}")
 
 message(STATUS "Using ${SYMCC_RT_BACKEND} backend.")
 
-if (NOT TARGET SymccRtStatic)
-  message(FATAL_ERROR "The backend \"${SYMCC_RT_BACKEND}\" does not produce the target SymccRtStatic.\
+if (NOT TARGET SymCCRtStatic)
+  message(FATAL_ERROR "The backend \"${SYMCC_RT_BACKEND}\" does not produce the target SymCCRtStatic.\
 This is a bug and it should be reported. Please open PR to the symcc-rt repository.")
 endif()
 
-if (NOT TARGET SymccRtShared)
-  message(FATAL_ERROR "The backend \"${SYMCC_RT_BACKEND}\" does not produce the target SymccRtShared.\
+if (NOT TARGET SymCCRtShared)
+  message(FATAL_ERROR "The backend \"${SYMCC_RT_BACKEND}\" does not produce the target SymCCRtShared.\
 This is a bug and it should be reported. Please open PR to the symcc-rt repository.")
 endif()
 
-set_target_properties(SymccRtStatic PROPERTIES OUTPUT_NAME "symcc-rt")
-set_target_properties(SymccRtShared PROPERTIES OUTPUT_NAME "symcc-rt")
+set_target_properties(SymCCRtStatic PROPERTIES OUTPUT_NAME "symcc-rt")
+set_target_properties(SymCCRtShared PROPERTIES OUTPUT_NAME "symcc-rt")
