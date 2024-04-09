@@ -84,6 +84,6 @@ Lesser General Public License along with SymCC Runtime. If not, see
 The following pieces of software have additional or alternate copyrights,
 licenses, and/or restrictions:
 
-| Program       | Directory                   |
-|---------------|-----------------------------|
-| QSYM          | `qsym_backend/qsym`         |
+| Program       | Directory           |
+|---------------|---------------------|
+| QSYM          | `backend/qsym/qsym` |
