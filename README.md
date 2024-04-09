@@ -48,7 +48,12 @@ If you wish to use this in your scientific work, please cite the SymCC paper:
 More information on the paper is available
 [here](http://www.s3.eurecom.fr/tools/symbolic_execution/symcc.html).
 
-### Bug reporting
+## Contributing
+
+We welcome Issues and Pull requests. If you wish to contribute, please have a look
+to the `CONTRIBUTING.md` file.
+
+## Bug reporting
 
 We appreciate bugs with test cases and steps to reproduce, PR with
 corresponding test cases. SymCC Runtime is currently understaffed, we hope to

@@ -1,4 +1,4 @@
-# Contributing to SymCC
+# Contributing to SymCC Runtime
 
 We encourage everyone to contribute improvements and bug fixes to SymCC Runtime. Our
 preferred way of accepting contributions is via GitHub pull requests. Please be
