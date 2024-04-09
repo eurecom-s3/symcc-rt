@@ -32,10 +32,7 @@ string(REPLACE ";" ", " SYMCC_RT_AVAILABLE_BACKENDS_FMT "\{${SYMCC_RT_AVAILABLE_
 set(SYMCC_RT_BACKEND "qsym" CACHE STRING "SymCC Runtime Backend to build.\
 Backends available: ${SYMCC_RT_AVAILABLE_BACKENDS_FMT}.")
 option(Z3_TRUST_SYSTEM_VERSION "Use the system-provided Z3 without a version check" OFF)
-
-if (NOT DEFINED LLVM_VERSION)
-  set(LLVM_VERSION 17 CACHE STRING "LLVM version to use. The corresponding LLVM dev package must be installed.")
-endif()
+set(LLVM_VERSION "" CACHE STRING "LLVM version to use. The corresponding LLVM dev package must be installed.")
 
 # Place the final products in the top-level output directory
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
