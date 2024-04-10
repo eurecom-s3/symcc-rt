@@ -15,7 +15,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y \
             llvm-${{ matrix.llvm_version }}-dev \
-            libz3-dev \
+            libz3-dev ninja-build
       - name: Build SymCC with the QSYM backend
         run: |
           mkdir build
@@ -59,7 +59,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y \
             llvm-${{ matrix.llvm_version }}-dev \
-            libz3-dev \
+            libz3-dev ninja-build
       - name: Build SymCC with the QSYM backend
         run: |
           mkdir build
