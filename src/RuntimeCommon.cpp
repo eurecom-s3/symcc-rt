@@ -437,7 +437,7 @@ SymExpr _sym_build_funnel_shift_left(SymExpr a, SymExpr b, SymExpr c) {
   SymExpr concat = _sym_concat_helper(a, b);
   SymExpr shift = _sym_build_unsigned_rem(c, _sym_build_integer(bits, bits));
 
-  return _sym_extract_helper(_sym_build_shift_left(concat, shift), 0, bits);
+  return _sym_extract_helper(_sym_build_shift_left(concat, shift), 2 * bits - 1, bits);
 }
 
 SymExpr _sym_build_funnel_shift_right(SymExpr a, SymExpr b, SymExpr c) {
@@ -445,8 +445,8 @@ SymExpr _sym_build_funnel_shift_right(SymExpr a, SymExpr b, SymExpr c) {
   SymExpr concat = _sym_concat_helper(a, b);
   SymExpr shift = _sym_build_unsigned_rem(c, _sym_build_integer(bits, bits));
 
-  return _sym_extract_helper(_sym_build_logical_shift_right(concat, shift), 0,
-                             bits);
+  return _sym_extract_helper(_sym_build_logical_shift_right(concat, shift), bits - 1,
+                             0);
 }
 
 SymExpr _sym_build_abs(SymExpr expr) {
