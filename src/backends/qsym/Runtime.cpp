@@ -185,6 +185,11 @@ void _sym_initialize(void) {
     exit(-1);
   }
 
+  if (g_config.randomSeed) {
+    z3::set_param("smt.random_seed",
+                  std::to_string(g_config.randomSeed.value()).c_str());
+  }
+
   g_z3_context = new z3::context{};
   g_enhanced_solver = new EnhancedQsymSolver{};
   g_solver = g_enhanced_solver; // for QSYM-internal use

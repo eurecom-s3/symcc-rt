@@ -127,6 +127,10 @@ void _sym_initialize(void) {
   cfg = Z3_mk_config();
   Z3_set_param_value(cfg, "model", "true");
   Z3_set_param_value(cfg, "timeout", "10000"); // milliseconds
+  if (g_config.randomSeed) {
+    Z3_set_param_value(cfg, "smt.random_seed",
+                       std::to_string(g_config.randomSeed.value()).c_str());
+  }
   g_context = Z3_mk_context_rc(cfg);
   Z3_del_config(cfg);
 

@@ -18,6 +18,7 @@
 #include <algorithm>
 #include <cstddef>
 #include <limits>
+#include <optional>
 #include <sstream>
 #include <stdexcept>
 #include <variant>
@@ -90,6 +91,19 @@ void loadConfig() {
       msg << "The GC threshold must be between 0 and "
           << std::numeric_limits<size_t>::max();
       throw std::runtime_error(msg.str());
+    }
+  }
+
+  auto *randomSeedStr = getenv("SYMCC_RANDOM_SEED");
+  if (randomSeedStr) {
+    try {
+      size_t pos;
+      g_config.randomSeed = std::make_optional(std::stoul(randomSeedStr, &pos));
+      if (pos != std::string(randomSeedStr).size()) {
+        throw std::runtime_error("SYMCC_RANDOM_SEED should be a valid integer");
+      }
+    } catch (std::invalid_argument &) {
+      throw std::runtime_error("SYMCC_RANDOM_SEED should be a valid integer");
     }
   }
 }
